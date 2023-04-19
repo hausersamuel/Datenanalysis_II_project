@@ -1,14 +1,27 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
-data_df = pd.read_csv('test_data.csv')
 
-z_max = 40000 # the upper bound for the positiion of the 2nd detector
-resolution = 1 # m
-half_detector_height = 2 # m
-histogram_array = np.zeros(int(z_max * 1/resolution))
+def generate_test_data(N):
+    decay_length = np.random.exponential(scale=562, size=N)
+    angle_1 = np.random.uniform(0, np.pi/4, size=N)
+    angle_2 = np.random.uniform(0, np.pi/4, size=N)
 
-def make_histogram_array():
+    test_data_df = pd.DataFrame({
+        'decay lenght K+' : decay_length,
+        'angle pi+' : angle_1,
+        'angle pi0' : angle_2
+    })
+
+    test_data_df.to_csv('test_data.csv',index=False)
+
+def make_histogram_array(data_file, resolution, z_max):
+    half_detector_height = 2 * 1/resolution 
+    histogram_array = np.zeros(int(z_max * 1/resolution))
+    data_df = pd.read_csv(data_file)
+    print(data_df)
+
     # data_df = data_df.reset_index()  # make sure indexes pair with number of rows
     for _, row in data_df.iterrows():
         dK = row['decay lenght K+']
@@ -18,7 +31,7 @@ def make_histogram_array():
         # distance (on the z axis) when paricle leaves detectable range (on the y axis)
         #       /|
         #      / | 2m
-        # ____/__|         2/z = tan(a) --> z = 2/tan(a)
+        # ____/__|         2m/z = tan(a) --> z = 2m/tan(a)
         #  dK  z
 
         z1 = half_detector_height/np.tan(a1)
@@ -34,5 +47,13 @@ def make_histogram_array():
 
     return histogram_array
 
-print(max(histogram_array))
+
+generate_test_data(1000)
+
+z_max = 5000 # the upper bound for the positiion of the 2nd detector in meter
+resolution = 0.001 # m
+histogram_array = make_histogram_array('test_data.csv', resolution, z_max)
+plt.plot(histogram_array)
+print(plt.xticks()[0])
+plt.show()
     
