@@ -1,0 +1,43 @@
+#Part 3
+c = 299792458 #m/s
+
+l_k = 609.5 #measured mean decay length of kaon
+L_pi = 4188 #measured mean decay length of pion
+
+mass_kaon = 493.68 #Mev
+mass_pi_plus = 193.57 #Mev
+mass_pi_minus = mass_pi_plus
+
+
+def gamma(E,m):
+    return E/m
+
+def beta(p,E):
+    return p/E
+
+
+
+#3a)
+
+
+
+decay_position = np.random.exponential(scale=1/l_k,size=len(dec_lengths_array))
+
+
+
+#3b)
+
+angle_plus_k_rest = np.random.uniform(0,2*np.pi,len(dec_lengths_array))
+angle_minus_k_rest = np.random.uniform(0,2*np.pi,len(dec_lengths_array))
+
+
+
+#3c)
+
+def lorentz_boost(E,p,m):
+    return np.array([[gamma(E,m), 0, 0, beta(p,E)*gamma(E,m)],
+                    [0, 1, 0, 0]
+                    [0, 0, 1, 0]
+                    [beta(p,E)*gamma(E,m), 0, 0, gamma]])
+
+
